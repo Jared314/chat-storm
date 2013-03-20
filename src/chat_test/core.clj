@@ -1,4 +1,4 @@
-(ns core.main
+(ns chat-test.core
     (:require [lamina.core :refer :all]
               [aleph.http :refer :all]
               [compojure.core :refer :all]
@@ -45,10 +45,6 @@
            (POST ["/"] {body :body} (post-message (slurp body)) "")
            (route/resources "/static")
            (route/not-found "Page not found"))
-
-; (defn ring-handler [& args]
-;       (start-http-server (wrap-ring-handler app-routes)
-;                        {:host "localhost" :port port :websocket true}))))
 
 (defn -main [& args]
       (let [port (Integer. (str (or (first args) 5000)))]

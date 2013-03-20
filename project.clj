@@ -5,6 +5,6 @@
                  [compojure "1.1.5"]
                  [ring "1.1.8"]
                  [enlive "1.1.1"]]
-  :aot [core.main]
-  :main core.main
+  :aot [chat-test.core]
+  :main chat-test.core
   :min-lein-version "2.0.0")
