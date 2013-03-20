@@ -1,5 +1,5 @@
-(defproject chat-test "0.0.1"
-  :description "Aleph testing"
+(defproject chat-test "1.0.0-SNAPSHOT"
+  :description "Aleph based chat server testing"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [aleph "0.3.0-beta11"]
                  [compojure "1.1.5"]
