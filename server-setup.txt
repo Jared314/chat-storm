@@ -1,0 +1,52 @@
+#!/bin/bash
+# Ubuntu 12.04 LTS
+# sudo apt-get update && sudo apt-get -y update
+sudo apt-get -y install git openjdk-7-jdk
+
+cd /tmp
+wget https://raw.github.com/technomancy/leiningen/stable/bin/lein
+chmod 755 lein
+sudo chown root:root lein
+sudo mv lein /usr/local/bin/lein
+
+sudo mkdir /usr/local/lein
+sudo mkdir /usr/local/mvn
+
+# Leiningen maven system wide repo
+sudo cat << 'ENDFILE' > /usr/local/lein/profiles.clj
+{:user {:local-repo "/usr/local/mvn"}}
+ENDFILE
+
+cd /opt
+sudo git clone https://github.com/Jared314/chat-test.git
+
+# Upstart Script
+sudo cat << 'ENDFILE' > /etc/init/chat-test.conf
+description "start and stop the chat-test aleph server"
+version "1.0"
+author "Jared Lobberecht"
+
+env APP_HOME=/opt/chat-test
+env PORT=80
+env LEIN_ROOT=1
+export LEIN_ROOT
+env LEIN_HOME="/usr/local/lein"
+export LEIN_HOME
+
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on [!12345]
+respawn
+respawn limit 5 30
+
+pre-start script
+chdir $APP_HOME
+exec lein deps
+end script
+
+script
+chdir $APP_HOME
+exec lein with-profile production trampoline run -m chat-test.core $PORT production
+end script
+ENDFILE
+
+sudo start chat-test
