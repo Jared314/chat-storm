@@ -1,0 +1,8 @@
+pom.xml
+*jar
+/lib/
+/classes/
+.lein*
+.cake
+/target/
+.tags*
