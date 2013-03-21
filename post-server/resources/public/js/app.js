@@ -26,7 +26,6 @@ $(function() {
 
   // Get initial state
   $.getJSON(window.stateurl, function(data, textStatus, jqXHR){
-    console.log(data);
     $.each(data.data, function() {
       $("#messages").append("<p>" + this + "</p>");
     });
