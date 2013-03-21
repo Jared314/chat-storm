@@ -9,6 +9,10 @@
     (:gen-class))
 
 (def default-room-name "room1")
+(def options-response 
+     {:status 200 
+      :headers {"Access-Control-Allow-Origin" "*"
+                "Access-Control-Request-Method" "GET"}})
 
 (defn chat-channel-init [ch]
       (receive-all ch (fn [x] true)))
@@ -26,6 +30,7 @@
 
 (defroutes app-routes
            (GET ["/"] {} (wrap-aleph-handler chat))
+           (OPTIONS ["/"] {} options-response)
            (route/not-found "Page not found"))
 
 (defn -main [& args]
