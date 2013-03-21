@@ -20,9 +20,7 @@
 
 (defn get-memcached-status []
       (let [data (memcache/get @cache-connection cache-key)]
-           (if (not (nil? data))
-               {:data data}
-               {:data []})))
+               {:data (or data [])}))
 
 (defn get-status [request]
       {:status 200
