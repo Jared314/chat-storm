@@ -1,7 +1,7 @@
 #!/bin/bash
 # Ubuntu 12.04.2 LTS
 # sudo apt-get update && sudo apt-get -y update
-sudo apt-get -y install git openjdk-7-jdk daemon unzip
+sudo apt-get -y install git openjdk-7-jdk memcached unzip
 
 cd /tmp
 wget https://raw.github.com/technomancy/leiningen/stable/bin/lein
@@ -20,13 +20,14 @@ ENDFILE
 cd /opt
 sudo git clone https://github.com/Jared314/chat-test.git
 
-# Upstart Script
-sudo cat << 'ENDFILE' > /etc/init/chat-test.conf
-description "start and stop the chat-test aleph server"
+# Upstart Scripts
+# post-server
+sudo cat << 'ENDFILE' > /etc/init/post-server.conf
+description "start and stop the post-server"
 version "1.0"
 author "Jared Lobberecht"
 
-env APP_HOME=/opt/chat-test
+env APP_HOME=/opt/chat-test/post-server
 env PORT=80
 env LEIN_ROOT=1
 export LEIN_ROOT
@@ -45,11 +46,71 @@ end script
 
 script
 chdir $APP_HOME
-exec lein with-profile production trampoline run -m chat-test.core $PORT production
+exec lein with-profile production trampoline run -m post-server.core $PORT
+end script
+ENDFILE
+
+# socket-server
+sudo cat << 'ENDFILE' > /etc/init/socket-server.conf
+description "start and stop the socket-server"
+version "1.0"
+author "Jared Lobberecht"
+
+env APP_HOME=/opt/chat-test/socket-server
+env PORT=81
+env LEIN_ROOT=1
+export LEIN_ROOT
+env LEIN_HOME="/usr/local/lein"
+export LEIN_HOME
+
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on [!12345]
+respawn
+respawn limit 5 30
+
+pre-start script
+chdir $APP_HOME
+exec lein deps
+end script
+
+script
+chdir $APP_HOME
+exec lein with-profile production trampoline run -m socket-server.core $PORT
+end script
+ENDFILE
+
+# status-server
+sudo cat << 'ENDFILE' > /etc/init/status-server.conf
+description "start and stop the status-server"
+version "1.0"
+author "Jared Lobberecht"
+
+env APP_HOME=/opt/chat-test/status-server
+env PORT=82
+env LEIN_ROOT=1
+export LEIN_ROOT
+env LEIN_HOME="/usr/local/lein"
+export LEIN_HOME
+
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on [!12345]
+respawn
+respawn limit 5 30
+
+pre-start script
+chdir $APP_HOME
+exec lein deps
+end script
+
+script
+chdir $APP_HOME
+exec lein with-profile production trampoline run -m status-server.core $PORT
 end script
 ENDFILE
 
 sudo start chat-test
+sudo start chat-test
+sudo start status-server
 
 # Kestrel queue setup
 cd /tmp
