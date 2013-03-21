@@ -4,6 +4,6 @@ pom.xml
 /classes/
 .lein*
 .cake
-/target/
+*/target/
 .tags*
 .DS_Store
