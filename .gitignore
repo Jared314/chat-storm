@@ -6,3 +6,4 @@ pom.xml
 .cake
 /target/
 .tags*
+.DS_Store
