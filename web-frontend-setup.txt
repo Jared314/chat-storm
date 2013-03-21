@@ -108,8 +108,8 @@ exec lein with-profile production trampoline run -m status-server.core $PORT
 end script
 ENDFILE
 
-sudo start chat-test
-sudo start chat-test
+sudo start post-server
+sudo start socket-server
 sudo start status-server
 
 # Kestrel queue setup
