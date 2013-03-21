@@ -20,8 +20,7 @@
        :body (page-template)})
 
 (defn post-message [message]
-      (let [data [message]]
-           (kestrel/set @queue-connection queue-name 0 data)))
+      (kestrel/set @queue-connection queue-name 0 message))
 
 (defroutes app-routes
            (GET ["/"] {} index-page)
