@@ -10,11 +10,16 @@
               [clojurewerkz.spyglass.client :as memcache])
     (:gen-class))
 
-(def cache-connection nil)
+(def cache-connection (ref nil))
 (def cache-key "room1")
 
+(def options-response 
+     {:status 200 
+      :headers {"Access-Control-Allow-Origin" "*"
+                "Access-Control-Request-Method" "GET"}})
+
 (defn get-memcached-status []
-      (let [data (memcache/get cache-connection cache-key)]
+      (let [data (memcache/get @cache-connection cache-key)]
            (if (not (nil? data))
                {:data data}
                {:data []})))
@@ -22,12 +27,13 @@
 (defn get-status [request]
       {:status 200
        :headers {"content-type" "application/json"
-                 "Access-Control-Allow-Origin" "*"}
+                 "Access-Control-Allow-Origin" "*"
+                 "Access-Control-Request-Method" "GET"}
        :body (json/write-str (get-memcached-status))})
 
 (defroutes app-routes
            (GET ["/"] {} get-status)
-           (OPTIONS ["/"] {} {:status 200 :headers {"Access-Control-Allow-Origin" "*"} :body ""})
+           (OPTIONS ["/"] {} options-response)
            (route/not-found "Page not found"))
 
 (def app (-> app-routes
@@ -37,5 +43,5 @@
   (let [port (Integer. (nth options 0 5000))
         mode (keyword (nth options 1 :dev))
         memcache-ip (nth options 2 "127.0.0.1:11211")]
-       (set! cache-connection (memcache/text-connection memcache-ip))
+       (dosync (ref-set cache-connection (memcache/text-connection memcache-ip)))
        (run-jetty app {:port port})))
