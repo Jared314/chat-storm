@@ -22,6 +22,10 @@
            (siphon chat-channel ch)
            (siphon ch chat-channel)))
 
+(defn post-message [message]
+      (let [chat-channel (named-channel default-room-name chat-channel-init)]
+           (enqueue chat-channel message)))
+
 (defn chat [ch request]
       (let [params (:route-params request)]
            (if (:websocket request)
@@ -30,6 +34,7 @@
 
 (defroutes app-routes
            (GET ["/"] {} (wrap-aleph-handler chat))
+           (POST ["/"] {body :body} (post-message (slurp body)) "")
            (OPTIONS ["/"] {} options-response)
            (route/not-found "Page not found"))
 
