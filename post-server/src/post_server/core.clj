@@ -6,11 +6,11 @@
               [ring.adapter.jetty :refer :all]
               [ring.middleware.file-info :refer :all]
               [ring.middleware.resource :refer :all]
-              [ring.util.response :as response])
+              [ring.util.response :as response]
+              [clojurewerkz.spyglass.client :as kestrel])
     (:gen-class))
 
-;TODO replace lamina with kestrel queue client
-
+(def queue-connection (ref nil))
 (deftemplate page-template "public/index.html" [])
 
 (defn index-page [request]
@@ -19,7 +19,7 @@
        :body (page-template)})
 
 (defn post-message [message]
-      true)
+      (kestrel/set queue-connection "" message))
 
 (defroutes app-routes
            (GET ["/"] {} index-page)
@@ -31,6 +31,7 @@
              handler/site))
 
 (defn -main [& options]
-  (let [port (Integer. (or (first options) 5000))
-        mode (keyword (or (second options) :dev))]
+  (let [port (Integer. (nth options 0 5000))
+        kestrel-ip (nth options 1 "127.0.0.1:22133")]
+       (dosync (ref-set queue-connection (kestrel/text-connection kestrel-ip)))
        (run-jetty app {:port port})))
