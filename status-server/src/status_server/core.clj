@@ -41,7 +41,6 @@
 
 (defn -main [& options]
   (let [port (Integer. (nth options 0 5000))
-        mode (keyword (nth options 1 :dev))
-        memcache-ip (nth options 2 "127.0.0.1:11211")]
+        memcache-ip (nth options 1 "127.0.0.1:11211")]
        (dosync (ref-set cache-connection (memcache/text-connection memcache-ip)))
        (run-jetty app {:port port})))
