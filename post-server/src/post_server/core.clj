@@ -11,6 +11,7 @@
     (:gen-class))
 
 (def queue-connection (ref nil))
+(def queue-name "room1")
 (deftemplate page-template "public/index.html" [])
 
 (defn index-page [request]
@@ -19,7 +20,8 @@
        :body (page-template)})
 
 (defn post-message [message]
-      (kestrel/set queue-connection "" message))
+      (let [data [message]]
+           (kestrel/set queue-connection queue-name 0 data)))
 
 (defroutes app-routes
            (GET ["/"] {} index-page)
