@@ -13,9 +13,15 @@ $(function() {
   };
   $("#socket").on("submit", function(e) {
     e.preventDefault();
-    $.post('', window.username + ': ' + $("#message").val(), function(){
-      $("#message").val("");
+
+    $.ajax({
+      type: "POST",
+      url: '',
+      data: window.username + ': ' + $("#message").val(),
+      contentType: "text/plain",
+      success: function(){ $("#message").val(""); }
     });
+
   });
 
   // Get initial state
