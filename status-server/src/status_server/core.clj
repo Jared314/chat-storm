@@ -16,7 +16,7 @@
 (def options-response 
      {:status 200 
       :headers {"Access-Control-Allow-Origin" "*"
-                "Access-Control-Request-Method" "GET"}})
+                "Access-Control-Allow-Methods" "GET, OPTIONS"}})
 
 (defn get-memcached-status []
       (let [data (memcache/get @cache-connection cache-key)]
@@ -28,7 +28,7 @@
       {:status 200
        :headers {"content-type" "application/json"
                  "Access-Control-Allow-Origin" "*"
-                 "Access-Control-Request-Method" "GET"}
+                 "Access-Control-Allow-Methods" "GET, OPTIONS"}
        :body (json/write-str (get-memcached-status))})
 
 (defroutes app-routes

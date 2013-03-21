@@ -12,7 +12,7 @@
 (def options-response 
      {:status 200 
       :headers {"Access-Control-Allow-Origin" "*"
-                "Access-Control-Request-Method" "GET"}})
+                "Access-Control-Allow-Methods" "GET, POST, OPTIONS"}})
 
 (defn chat-channel-init [ch]
       (receive-all ch (fn [x] true)))
@@ -34,7 +34,7 @@
 
 (defroutes app-routes
            (GET ["/"] {} (wrap-aleph-handler chat))
-           (POST ["/"] {body :body} (post-message (slurp body)) {:status 200 :headers {"Access-Control-Allow-Origin" "*" "Access-Control-Request-Method" "GET"} :body ""})
+           (POST ["/"] {body :body} (post-message (slurp body)) {:status 200 :headers {"Access-Control-Allow-Origin" "*" "Access-Control-Allow-Methods" "GET, POST, OPTIONS"} :body ""})
            (OPTIONS ["/"] {} options-response)
            (route/not-found "Page not found"))
 
