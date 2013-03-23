@@ -1,5 +1,5 @@
 #!/bin/bash
-# NOTE: Run with with sudo
+# NOTE: Run with sudo
 #
 # Ubuntu 12.04.2 LTS
 # sudo apt-get update && sudo apt-get -y update
