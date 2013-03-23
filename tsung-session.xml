@@ -17,17 +17,17 @@
   </load>
 
   <options>
-    <option name="file_server" id='userdb' value="/home/foo/.tsung/tsung-data.csv"/>
+    <option name="file_server" id='userdb' value="/home/ubuntu/tsung-data.csv"/>
   </options>
 
   <sessions>
-    <setdynvars sourcetype="file" fileid="userdb" delimiter=";" order="iter">
-      <var name="message" />
-    </setdynvars>
     <session name="foo" probability="100" type="ts_http">
-      <request><http url="/" method="POST" contents="loaduser%%_tsung_userid%%: %%_message%%"></http></request>
+      <setdynvars sourcetype="file" fileid="userdb" delimiter=";" order="iter">
+        <var name="message" />
+      </setdynvars>
+
+      <request subst="true"><http url="http://10.248.44.154/" method="POST" contents="loaduser%%_tsung_userid%%: %%_message%%"></http></request>
       <thinktime min="15" max="30" random="true"></thinktime>
     </session>
   </sessions>
-
 </tsung>
