@@ -121,7 +121,6 @@ unzip kestrel-2.4.1.zip
 rm kestrel-2.4.1.zip
 sudo mkdir /usr/local/kestrel
 sudo mkdir /var/log/kestrel
-sudo mkdir /var/run/kestrel
 sudo mkdir /etc/sysconfig
 sudo mv kestrel-2.4.1 /usr/local/kestrel/current
 sudo chmod 775 /usr/local/kestrel/current/scripts/kestrel.sh
@@ -130,6 +129,7 @@ sudo update-rc.d kestrel defaults
 sudo cat << 'ENDFILE' > /etc/sysconfig/kestrel
 JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64/jre"
 HEAP_OPTS="-Xmx512m -Xms512m -XX:NewSize=256m"
+mkdir -p /var/run/$APP_NAME
 ENDFILE
 
 sudo service kestrel start
