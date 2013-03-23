@@ -3,11 +3,16 @@ $(function() {
   window.stateurl = '//' + window.location.hostname + ':82/';
   window.username = 'user' + Math.floor((Math.random()*1000000)+1000);
   window.socket = null;
+  window.messageCount = 0;
 
   function intializeSocket($, socketurl){
     var s = new WebSocket(socketurl);
     s.onmessage = function(msg) {
-      $("#messages").append("<p>" + msg.data + "</p>");
+      window.messageCount++;
+      if(window.messageCount > 50){
+        $('#messages:last-child').remove();
+      }
+      $("#messages").prepend("<p>" + msg.data + "</p>");
     };
     s.onopen = function(){
       // Setup complete, so re-enable input
@@ -38,6 +43,7 @@ $(function() {
 
   // Get initial state
   $.getJSON(window.stateurl, function(data, textStatus, jqXHR){
+    window.messageCount = data.data.length;
     $.each(data.data, function() {
       $("#messages").append("<p>" + this + "</p>");
     });
