@@ -10,7 +10,8 @@ $(function() {
     s.onmessage = function(msg) {
       window.messageCount++;
       if(window.messageCount > 50){
-        $('#messages:last-child').remove();
+        $('#messages p:last-child').remove();
+        window.messageCount--;
       }
       $("#messages").prepend("<p>" + msg.data + "</p>");
     };
