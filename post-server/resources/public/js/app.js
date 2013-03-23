@@ -2,26 +2,38 @@ $(function() {
   window.socketurl = 'ws://' + window.location.hostname + ':81/';
   window.stateurl = '//' + window.location.hostname + ':82/';
   window.username = 'user' + Math.floor((Math.random()*1000000)+1000);
+  window.socket = null;
 
-  // Show random username
+  function intializeSocket($, socketurl){
+    var s = new WebSocket(socketurl);
+    s.onmessage = function(msg) {
+      $("#messages").append("<p>" + msg.data + "</p>");
+    };
+    s.onopen = function(){
+      // Setup complete, so re-enable input
+      $("form button[type=submit], form input[type=submit]").prop("disabled", false);
+    };
+    return s;
+  }
+
+  // Disable input until setup is complete
+  $("form button[type=submit], form input[type=submit]").prop("disabled", true);
+
+  // Show username
   $("#username").text(window.username);
 
-  // State update socket
-  window.socket = new WebSocket(socketurl);
-  socket.onmessage = function(msg) {
-    $("#messages").append("<p>" + msg.data + "</p>");
-  };
-  $("#socket").on("submit", function(e) {
+  // Handle message submission
+  $("form").on("submit", function(e) {
     e.preventDefault();
-
     $.ajax({
       type: "POST",
       url: '',
       data: window.username + ': ' + $("#message").val(),
       contentType: "text/plain",
-      success: function(){ $("#message").val(""); }
+      success: function(){
+        $("#message").val("");
+      }
     });
-
   });
 
   // Get initial state
@@ -29,6 +41,8 @@ $(function() {
     $.each(data.data, function() {
       $("#messages").append("<p>" + this + "</p>");
     });
-  });
 
+    // Initialize the update websocket
+    window.socket = intializeSocket($, window.socketurl);
+  });
 });
