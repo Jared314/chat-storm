@@ -41,11 +41,6 @@ stop on [!12345]
 respawn
 respawn limit 5 30
 
-pre-start script
-chdir $APP_HOME
-exec lein deps
-end script
-
 script
 chdir $APP_HOME
 exec lein with-profile production trampoline run -m post-server.core $PORT
@@ -70,11 +65,6 @@ stop on [!12345]
 respawn
 respawn limit 5 30
 
-pre-start script
-chdir $APP_HOME
-exec lein deps
-end script
-
 script
 chdir $APP_HOME
 exec lein with-profile production trampoline run -m socket-server.core $PORT
@@ -98,11 +88,6 @@ start on (local-filesystems and net-device-up IFACE!=lo)
 stop on [!12345]
 respawn
 respawn limit 5 30
-
-pre-start script
-chdir $APP_HOME
-exec lein deps
-end script
 
 script
 chdir $APP_HOME
