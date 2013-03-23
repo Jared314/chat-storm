@@ -1,4 +1,6 @@
 #!/bin/bash
+# NOTE: Run with with sudo
+#
 # Ubuntu 12.04.2 LTS
 # sudo apt-get update && sudo apt-get -y update
 sudo apt-get -y install git openjdk-7-jdk memcached unzip
@@ -119,6 +121,7 @@ unzip kestrel-2.4.1.zip
 rm kestrel-2.4.1.zip
 sudo mkdir /usr/local/kestrel
 sudo mkdir /var/log/kestrel
+sudo mkdir /var/run/kestrel
 sudo mkdir /etc/sysconfig
 sudo mv kestrel-2.4.1 /usr/local/kestrel/current
 sudo chmod 775 /usr/local/kestrel/current/scripts/kestrel.sh
