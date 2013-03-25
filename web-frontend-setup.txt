@@ -3,7 +3,7 @@
 #
 # Ubuntu 12.04.2 LTS
 # sudo apt-get update && sudo apt-get -y update
-sudo apt-get -y install git openjdk-7-jdk memcached unzip
+sudo apt-get -y install git openjdk-7-jdk redis-server unzip
 
 cd /tmp
 wget https://raw.github.com/technomancy/leiningen/stable/bin/lein
