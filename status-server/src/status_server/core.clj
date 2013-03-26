@@ -10,7 +10,6 @@
               [taoensso.carmine :as car])
     (:gen-class))
 
-(def cache-connection (ref nil))
 (def cache-key "room1")
 (def pool (car/make-conn-pool))
 (def spec-server1 (car/make-conn-spec :host "127.0.0.1" :port 6379))
@@ -40,7 +39,5 @@
              handler/site))
 
 (defn -main [& options]
-  (let [port (Integer. (nth options 0 5000))
-        cache-ip (nth options 1 "127.0.0.1:6379")]
-       ;(dosync (ref-set cache-connection (memcache/text-connection cache-ip)))
+  (let [port (Integer. (nth options 0 5000))]
        (run-jetty app {:port port})))
