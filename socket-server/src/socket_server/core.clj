@@ -34,7 +34,7 @@
 
 (defroutes app-routes
            (GET ["/"] {} (wrap-aleph-handler chat))
-           (POST ["/"] {body :body} (post-message (slurp body)) {:status 200 :headers {"Access-Control-Allow-Origin" "*" "Access-Control-Allow-Methods" "GET, POST, OPTIONS"} :body ""})
+           (POST ["/"] {body :body} (if (not (nil? body)) (post-message (slurp body))) {:status 200 :headers {"Access-Control-Allow-Origin" "*" "Access-Control-Allow-Methods" "GET, POST, OPTIONS"} :body ""})
            (OPTIONS ["/"] {} options-response)
            (route/not-found "Page not found"))
 
