@@ -7,20 +7,19 @@
              [backtype.storm.scheme StringScheme])
     (:gen-class))
 
-(storm/defbolt score-message ["str" "score"] [tuple collector]
+(storm/defbolt filter-message ["str" "score"] [tuple collector]
                (let [message (.getStringByField tuple "str")]
                     (if (nil? (re-seq #"SPAM" message))
-                      (storm/emit-bolt! collector [message 0] :anchor tuple)
-                      (storm/emit-bolt! collector [message 1] :anchor tuple))
+                      (storm/emit-bolt! collector [message 0] :anchor tuple))
                     (storm/ack! collector tuple)))
 
 (defn build-topology [queuehost queuename cachekey cachehost cachelimit posthost]
       (storm/topology {"messages" (storm/spout-spec (KestrelThriftSpout. queuehost 2229 queuename (StringScheme.))
                                                     :p 2)}
-                      {"scoring" (storm/bolt-spec {"messages" :shuffle}
-                                                  score-message
+                      {"filtering" (storm/bolt-spec {"messages" :local-or-shuffle}
+                                                  filter-message
                                                   :p 2)
-                       "broadcaster" (storm/bolt-spec {"scoring" :shuffle}
+                       "broadcaster" (storm/bolt-spec {"filtering" :local-or-shuffle}
                                                       (version1/broadcaster cachekey cachehost cachelimit posthost)
                                                       :p 2)}))
 
@@ -32,5 +31,5 @@
             cachelimit (dec 50)
             posthost "http://ip-10-248-44-154.us-west-2.compute.internal:81"]
            (helpers/bootstrap (build-topology queuehost queuename cachekey cachehost cachelimit posthost)
-                              name
+                              (first name)
                               {storm-config/TOPOLOGY-WORKERS 2})))
