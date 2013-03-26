@@ -26,7 +26,9 @@
         <var name="message" />
       </setdynvars>
       <for from="1" to="100" var="post_number">
-        <request subst="true"><http url="http://192.0.2.0/" method="POST" contents="loaduser%%_tsung_userid%%: %%_message%%"></http></request>
+        <request subst="true"><http url="http://192.0.2.0/" method="POST" contents="loaduser%%_tsung_userid%%: %%_message%%">
+          <http_header name="Content-Type" value="text/plain" />
+        </http></request>
         <thinktime min="15" max="30" random="true"></thinktime>
       </for>
     </session>
