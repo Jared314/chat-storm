@@ -120,5 +120,5 @@ ENDFILE
 sudo service kestrel start
 
 # Redis setup
-sudo sed  -i '/^bind 127\.0\.0\.1\s*/# bind 127\.0\.0\.1/' /etc/redis/redis.conf
+sudo sed -i '/^bind 127\.0\.0\.1\s*/# bind 127\.0\.0\.1/' /etc/redis/redis.conf
 sudo service redis-server restart
