@@ -13,6 +13,10 @@
 (def queue-connection (ref nil))
 (def queue-name "room1")
 (deftemplate page-template "public/index.html" [])
+(def options-response 
+     {:status 200 
+      :headers {"Access-Control-Allow-Origin" "*"
+                "Access-Control-Allow-Methods" "GET, POST, OPTIONS"}})
 
 (defn index-page [request]
       {:status 200
@@ -24,7 +28,8 @@
 
 (defroutes app-routes
            (GET ["/"] {} index-page)
-           (POST ["/"] {body :body} (post-message (slurp body)) "")
+           (POST ["/"] {body :body} (post-message (slurp body)) {:status 200 :headers {"Access-Control-Allow-Origin" "*" "Access-Control-Allow-Methods" "GET, POST, OPTIONS"} :body ""})
+           (OPTIONS ["/"] {} options-response)
            (route/resources "/static")
            (route/not-found "Page not found"))
 
