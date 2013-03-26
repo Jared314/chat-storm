@@ -26,7 +26,7 @@
 (defn build-topology [queuehost queuename cachekey cachehost cachelimit posthost]
       (storm/topology {"messages" (storm/spout-spec (KestrelThriftSpout. queuehost 2229 queuename (StringScheme.))
                                                     :p 2)}
-                      {"broadcaster" (storm/bolt-spec {"messages" :shuffle}
+                      {"broadcaster" (storm/bolt-spec {"messages" :local-or-shuffle}
                                                       (broadcaster cachekey cachehost cachelimit posthost)
                                                       :p 2)}))
 

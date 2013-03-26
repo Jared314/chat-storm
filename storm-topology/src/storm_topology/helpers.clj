@@ -1,10 +1,12 @@
 (ns storm-topology.helpers
-    (:require [backtype.storm.clojure :refer [local-cluster submit-remote-topology]]
+    (:require [backtype.storm.clojure :as storm]
               [backtype.storm.config :refer [TOPOLOGY-DEBUG]])
+    (:import [backtype.storm StormSubmitter]
+             [backtype.storm.generated SubmitOptions TopologyInitialStatus])
     (:gen-class))
 
 (defn- run-local! [topology user-options]
-      (let [cluster (local-cluster)
+      (let [cluster (storm/local-cluster)
             name "debug"
             options (merge {TOPOLOGY-DEBUG true} user-options)]
            (.submitTopology cluster name options topology)
@@ -13,7 +15,7 @@
 
 (defn- submit-topology! [name topology user-options]
        (let [options (merge {TOPOLOGY-DEBUG false} user-options)]
-            (submit-remote-topology name options topology)))
+            (StormSubmitter/submitTopology name options topology (SubmitOptions. TopologyInitialStatus/INACTIVE))))
 
 (defn bootstrap [topology name options]
       (if (nil? name)
