@@ -24,11 +24,9 @@
                            (storm/ack! collector tuple)))))
 
 (defn build-topology [queuehost queuename cachekey cachehost cachelimit posthost]
-      (storm/topology {"messages" (storm/spout-spec (KestrelThriftSpout. queuehost 2229 queuename (StringScheme.))
-                                                    :p 1)}
+      (storm/topology {"messages" (storm/spout-spec (KestrelThriftSpout. queuehost 2229 queuename (StringScheme.)))}
                       {"broadcaster" (storm/bolt-spec {"messages" :local-or-shuffle}
-                                                      (broadcaster cachekey cachehost cachelimit posthost)
-                                                      :p 1)}))
+                                                      (broadcaster cachekey cachehost cachelimit posthost))}))
 
 (defn -main [& name]
       (let [queuehost "ec2-54-244-246-137.us-west-2.compute.amazonaws.com"

@@ -3,6 +3,7 @@
                  [clj-http "0.7.0"]
                  [com.taoensso/carmine "1.7.0-beta2"]]
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.4.0"]
-                                  [storm "0.8.2"]]}}
+                                  [storm "0.8.2"]]}
+             :test {:dependencies [[storm-test "0.2.0"]]}}
   :aot :all
   :min-lein-version "2.0.0")
