@@ -22,10 +22,10 @@
 
   <sessions>
     <session name="foo" probability="100" type="ts_http">
-      <setdynvars sourcetype="file" fileid="userdb" delimiter=";" order="iter">
-        <var name="message" />
-      </setdynvars>
       <for from="1" to="100" var="post_number">
+        <setdynvars sourcetype="file" fileid="userdb" delimiter=";" order="iter">
+          <var name="message" />
+        </setdynvars>
         <request subst="true"><http url="http://192.0.2.0/" method="POST" contents="loaduser%%_tsung_userid%%: %%_message%%">
           <http_header name="Content-Type" value="text/plain" />
         </http></request>
