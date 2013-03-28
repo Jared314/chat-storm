@@ -25,18 +25,18 @@
 
 (defn build-topology [queuehost queuename cachekey cachehost cachelimit posthost]
       (storm/topology {"messages" (storm/spout-spec (KestrelThriftSpout. queuehost 2229 queuename (StringScheme.))
-                                                    :p 2)}
+                                                    :p 1)}
                       {"broadcaster" (storm/bolt-spec {"messages" :local-or-shuffle}
                                                       (broadcaster cachekey cachehost cachelimit posthost)
-                                                      :p 2)}))
+                                                      :p 3)}))
 
 (defn -main [& name]
-      (let [queuehost "ip-10-248-44-154.us-west-2.compute.internal"
+      (let [queuehost "ec2-54-244-246-137.us-west-2.compute.amazonaws.com"
             queuename "room1"
             cachekey "room1"
-            cachehost "ip-10-248-44-154.us-west-2.compute.internal"
+            cachehost "ec2-54-244-246-137.us-west-2.compute.amazonaws.com"
             cachelimit (dec 50)
-            posthost "http://ip-10-248-44-154.us-west-2.compute.internal:81"]
+            posthost "http://ec2-54-244-246-137.us-west-2.compute.amazonaws.com:81"]
            (helpers/bootstrap (build-topology queuehost queuename cachekey cachehost cachelimit posthost)
                               (first name)
                               {storm-config/TOPOLOGY-WORKERS 2})))
