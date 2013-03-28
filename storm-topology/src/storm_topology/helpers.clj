@@ -10,7 +10,7 @@
             name "debug"
             options (merge {TOPOLOGY-DEBUG true} user-options)]
            (.submitTopology cluster name options topology)
-           (Thread/sleep 10000)
+           (Thread/sleep 30000)
            (.shutdown cluster)))
 
 (defn- submit-topology! [name topology user-options]
